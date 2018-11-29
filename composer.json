@@ -7,13 +7,13 @@
     },
     "autoload": {
         "psr-4": {
-            "Raphael\\PaypalPayout\\": "packages/raphael/paypal-payout/src"
+            "Raphael\\PaypalPayout\\": "src"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "\\Raphael\\PaypalPayout\\PaypalPayoutServiceProvider"
+                "Raphael\\PaypalPayout\\PaypalPayoutServiceProvider"
             ]
         }
     }
