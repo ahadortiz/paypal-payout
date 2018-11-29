@@ -10,11 +10,11 @@ return [
   'sandbox' => [
     'client_id' => env('PAYPAL_SANDBOX_CLIENT_ID', ''),
     'secret' => env('PAYPAL_SANDBOX_SECRET', ''),
-    'webhook_id' => env('PAYPAL_SANDBOX_SECRET', ''),
+    'webhook_id' => env('PAYPAL_SANDBOX_WEBHOOK_ID', ''),
   ],
   'live' => [
     'client_id' => env('PAYPAL_LIVE_CLIENT_ID', ''),
     'secret' => env('PAYPAL_LIVE_SECRET', ''),
-    'webhook_id' => env('PAYPAL_LIVE_SECRET', ''),
+    'webhook_id' => env('PAYPAL_LIVE_WEBHOOK_ID', ''),
   ],
 ];
