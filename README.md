@@ -41,3 +41,14 @@ This package is developed for a special client.
         php artisan migrate
 
 4.  Set your paypal webhook url to `https://{your site url}/paypal/webhook`
+
+## Usage
+
+### Create Payout
+
+    $payout = new \Raphael\PaypalPayout\PaypalPayout;
+    $receiver = 'test@email.com';
+    $amount = 10;
+    $log = $payout::createPayout($receiver, $amount);
+
+You'll get log object if payout has been created, but get null if fails.
