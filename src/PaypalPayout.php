@@ -55,16 +55,26 @@ class PaypalPayout
     $request = clone $payouts;
 
     try {
-      $batch = $payouts->create(null, self::getPaypalContext());
+      $apiContext = self::getPaypalContext();
+      $payoutBatchId = $payouts->create(null, $apiContext)->getBatchHeader()->getPayoutBatchId();
+      $payoutBatch = \PayPal\Api\Payout::get($payoutBatchId, $apiContext);
+      $payoutItems = $payoutBatch->getItems();
+      foreach ($payoutItems as $detail) {
+        $log = new PayoutLog;
 
-      $log = new PayoutLog;
-      $log->batch_id = $batch->batch_header->payout_batch_id;
-      $log->details = json_encode($item);
-      $log->status = $batch->batch_header->batch_status;
-      $log->save();
+        $log->item_id = $detail->getPayoutItemId();
+        $log->status = $detail->getTransactionStatus();
+
+        $payoutItem = $detail->getPayoutItem();
+        $log->email = $payoutItem->getReceiver();
+        $log->amount = $payoutItem->getAmount()->getValue();
+
+        $log->save();
+      }
 
       return $log;
     } catch (\Exception $e) {
+      // echo "PayPal Payout GetData:<br>" . $e->getData() . "<br><br>";
       return null;
     }
   }

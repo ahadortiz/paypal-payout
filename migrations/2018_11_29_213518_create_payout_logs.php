@@ -15,8 +15,10 @@ class CreatePayoutLogs extends Migration
     {
         Schema::create('payout_logs', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('batch_id', 100);
-            $table->text('details');
+            $table->string('item_id', 100);
+            $table->string('transaction_id', 100)->nullable();
+            $table->string('email', 50);
+            $table->float('amount');
             $table->string('status', 20)->default('PENDING');
             $table->timestamps();
         });

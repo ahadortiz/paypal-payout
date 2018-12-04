@@ -1,20 +1,21 @@
 {
-    "name": "raphael/paypal-payout",
-    "description": "gateway of paypal payout",
-    "type": "library",
-    "require": {
-        "paypal/rest-api-sdk-php": "*"
-    },
-    "autoload": {
-        "psr-4": {
-            "Raphael\\PaypalPayout\\": "src"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Raphael\\PaypalPayout\\PaypalPayoutServiceProvider"
-            ]
-        }
+  "name": "raphael/paypal-payout",
+  "description": "gateway of paypal payout",
+  "type": "library",
+  "version": "1.0.2",
+  "require": {
+    "paypal/rest-api-sdk-php": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "Raphael\\PaypalPayout\\": "src"
     }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Raphael\\PaypalPayout\\PaypalPayoutServiceProvider"
+      ]
+    }
+  }
 }
