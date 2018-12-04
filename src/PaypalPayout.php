@@ -39,15 +39,20 @@ class PaypalPayout
 
     // add items
     $item = [
-      'value' => $amount,
-      'currency' => 'USD',
+      'email' => $email,
+      'amount' => $amount,
+      'sender_id' => uniqid(),
     ];
+
     $senderItem = new \PayPal\Api\PayoutItem();
     $senderItem->setRecipientType('Email')
-      ->setNote('Thanks for your patronage!')
-      ->setReceiver($email)
-      ->setSenderItemId(uniqid())
-      ->setAmount(new \PayPal\Api\Currency(json_encode($item)));
+      ->setNote("Please use {$item['sender_id']} to contact sender if you have any problem")
+      ->setReceiver($item['email'])
+      ->setSenderItemId($item['sender_id'])
+      ->setAmount(new \PayPal\Api\Currency(json_encode([
+        'value' => $item['amount'],
+        'currency' => 'USD',
+      ])));
 
     $payouts->setSenderBatchHeader($senderBatchHeader)
       ->addItem($senderItem);
@@ -57,20 +62,29 @@ class PaypalPayout
     try {
       $apiContext = self::getPaypalContext();
       $payoutBatchId = $payouts->create(null, $apiContext)->getBatchHeader()->getPayoutBatchId();
-      $payoutBatch = \PayPal\Api\Payout::get($payoutBatchId, $apiContext);
-      $payoutItems = $payoutBatch->getItems();
-      foreach ($payoutItems as $detail) {
-        $log = new PayoutLog;
 
-        $log->item_id = $detail->getPayoutItemId();
-        $log->status = $detail->getTransactionStatus();
+      $log = new PayoutLog;
 
-        $payoutItem = $detail->getPayoutItem();
-        $log->email = $payoutItem->getReceiver();
-        $log->amount = $payoutItem->getAmount()->getValue();
+      $log->item_id = $item['sender_id'];
+      $log->email = $item['email'];
+      $log->amount = $item['amount'];
+      $log->status = 'PENDING';
 
-        $log->save();
-      }
+      $log->save();
+      // $payoutBatch = \PayPal\Api\Payout::get($payoutBatchId, $apiContext);
+      // $payoutItems = $payoutBatch->getItems();
+      // foreach ($payoutItems as $detail) {
+      //   $log = new PayoutLog;
+
+      //   $log->status = $detail->getTransactionStatus();
+
+      //   $payoutItem = $detail->getPayoutItem();
+      //   $log->item_id = $payoutItem->getSenderItemId();
+      //   $log->email = $payoutItem->getReceiver();
+      //   $log->amount = $payoutItem->getAmount()->getValue();
+
+      //   $log->save();
+      // }
 
       return $log;
     } catch (\Exception $e) {
