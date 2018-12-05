@@ -55,7 +55,9 @@ class PaypalPayoutController extends Controller
     $log = PayoutLog::where('item_id', $data['resource']['payout_item']['sender_item_id'])->first();
     if ($log) {
       $log->status = $data['resource']['transaction_status'];
-      $log->transaction_id = $data['resource']['transaction_id'];
+      if (isset($data['resource']['transaction_id'])) {
+        $log->transaction_id = $data['resource']['transaction_id'];
+      }
       $log->save();
 
       \Log::debug("{$log->item_id} is $log->status");
